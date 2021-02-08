@@ -19,7 +19,7 @@ The Frontend (App) is developed with Unity and ARCore and displays the content o
 For the whole process we provide a `demo video`:
 
 <figure class="video_container">
-  <iframe src="https://www.youtube.com/embed/gFo4LCvVha8" frameborder="0" allowfullscreen="true"> </iframe>
+  <iframe src="https://www.youtube-nocookie.com/embed/N2el-QiziO4" frameborder="0" allowfullscreen="true"> </iframe>
 </figure>
 
 As well as a step-by-step `tutorial video`:
