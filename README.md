@@ -16,23 +16,13 @@ We use it for model creation and localization. The backend functions as a HTTP s
 
 The Frontend (App) is developed with Unity and ARCore and displays the content over the building.
 
-For the whole process we provide a `demo video`:
-
-<figure class="video_container">
-  <iframe src="https://www.youtube-nocookie.com/embed/N2el-QiziO4" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
-
-As well as a step-by-step `tutorial video`:
-
-<figure class="video_container">
-  <iframe src="https://www.youtube.com/embed/gFo4LCvVha8" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
+For the whole process we provide a [Demo video](https://www.youtube-nocookie.com/embed/N2el-QiziO4) as well as a step-by-step [Tutorial video](https://www.youtube.com/embed/gFo4LCvVha8) for setting up a new sight. 
 
 
 ## Installation
 
 Our tool requires Python >=3.6, PyTorch >=1.1, and [COLMAP](https://colmap.github.io/index.html). 
-Other dependencies are listed in `pyproject.toml` and can be installed using [Poetry](https://python-poetry.org/) with the command `poetry install`
+Other dependencies are listed in the `pyproject.toml` and can be installed using [Poetry](https://python-poetry.org/) with the command `poetry install`
 
 ## General pipeline
 
