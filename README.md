@@ -1,33 +1,38 @@
-# City Guide AR for Outdoor Sightseeing
+# ENSE Enhance Sightseeing
 
-We build a tool to enhance sightseeing with augmented reality content.
+We build a tool to enhance sightseeing using augmented reality.
 First we create a 3D model from images for a sight. Next AR content is created and fitted to the model. 
 Then in real-time the AR content is superimposed precisely over the real world building.  
 
 
 <p align="center">
-    <img src="Localization-Pipeline/doc/Pipeline.svg" width="70%"/></a>
+    <img src="doc/P2.svg" width="45%"/></a>
+    <img src="doc/P1.svg" width="45%"/></a>
 </p>
 
 The work is using `hloc` in the backend, a modular toolbox for state-of-the-art 6-DoF visual localization from Sarlin 
 et al. [Hloc](https://github.com/cvg/Hierarchical-Localization). 
 We use it for model creation and localization. The backend functions as a HTTP server, that a run-time carries out pose estimation in real-time, matching query images against the previously created models. 
 
-The Frontend (App) is developed with Unity and ARCore. 
+The Frontend (App) is developed with Unity and ARCore and displays the content over the building.
 
-We provide a step-by-step `tutorial video` for the whole process as well as a `demo video`.
+For the whole process we provide a `demo video`:
+
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/embed/gFo4LCvVha8" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
+
+As well as a step-by-step `tutorial video`:
+
+<figure class="video_container">
+  <iframe src="https://www.youtube.com/embed/gFo4LCvVha8" frameborder="0" allowfullscreen="true"> </iframe>
+</figure>
+
 
 ## Installation
 
 Our tool requires Python >=3.6, PyTorch >=1.1, and [COLMAP](https://colmap.github.io/index.html). 
-Other dependencies are listed in `pyproject.toml` and can be installed with `poetry install`
-For pose estimation, [pycolmap](https://github.com/mihaidusmanu/pycolmap) is required, which can be installed as:
-
-```
-pip install git+https://github.com/mihaidusmanu/pycolmap
-```
-
-Submodules can be pulled with `git submodule update --init --recursive`. 
+Other dependencies are listed in `pyproject.toml` and can be installed using [Poetry](https://python-poetry.org/) with the command `poetry install`
 
 ## General pipeline
 
