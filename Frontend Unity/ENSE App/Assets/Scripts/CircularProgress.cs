@@ -40,7 +40,6 @@ public class CircularProgress : MonoBehaviour
 
   void Update()
   {
-    // Update state of the fader. Start loading. Cancel loading.
     if (state == State.Hidden)
     {
 
@@ -79,7 +78,12 @@ public class CircularProgress : MonoBehaviour
   {
     StartCoroutine(FakeLoading(callback));
   }
-
+  
+  /// <summary>
+  /// Loading process with mutliple stages. 
+  /// </summary>
+  /// <param name="callback"></param>
+  /// <returns></returns>
   private IEnumerator FakeLoading(System.Action callback)
   {
     if (state == State.Hidden)

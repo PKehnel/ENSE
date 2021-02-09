@@ -66,7 +66,9 @@ public partial class AppManager : MonoBehaviour
         get => cameraManager;
         set => cameraManager = value;
     }
-    
+    /// <summary>
+    /// Deactive certain UI components at startup. 
+    /// </summary>
     private void Awake()
     {
         _arSessionOrigin = FindObjectOfType<ARSessionOrigin>();
@@ -77,7 +79,9 @@ public partial class AppManager : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         init_TMP_Dropdown();
     }
-    
+    /// <summary>
+    /// Listen to the time dropdwon and get the screen orientation.
+    /// </summary>
     private void Start()
     {
         timeDropdown.onValueChanged.RemoveListener(OnDropDownChanged);
@@ -93,6 +97,11 @@ public partial class AppManager : MonoBehaviour
         cameraManager.frameReceived -= OnCameraFrameReceived;
     }
 
+    /// <summary>
+    /// Initly set the screen to maximum possible resolution.
+    /// Currently hradcoded, needs to be implemented. 
+    /// </summary>
+    /// <param name="eventArgs"></param>
     void OnCameraFrameReceived(ARCameraFrameEventArgs eventArgs)
     {
         // Change to higher screen resolution then standard 640*480. 
@@ -103,8 +112,13 @@ public partial class AppManager : MonoBehaviour
             _initCameraResolution = true;
         }
     }
-    
-    //https://github.com/CAOR-MINES-ParisTech/colibri-vr-unity-package/blob/ab11dab814461154185a1e868cc5496cc35d6086/Runtime/ExternalConnectors/COLMAPConnector.cs#L662
+    /// <summary>
+    /// Convert coordinates from colmap to unity
+    ///  //https://github.com/CAOR-MINES-ParisTech/colibri-vr-unity-package/blob/ab11dab814461154185a1e868cc5496cc35d6086/Runtime/ExternalConnectors/COLMAPConnector.cs#L662
+    /// </summary>
+    /// <param name="position"> X,Y,Z position</param>
+    /// <param name="rotation"> Rotation as Quaternion</param>
+   
     private static void ConvertCoordinatesCOLMAPToUnity(ref Vector3 position, ref Quaternion rotation)
     {
         position = Quaternion.Inverse(rotation) * - position;
@@ -113,9 +127,13 @@ public partial class AppManager : MonoBehaviour
         rotation = new Quaternion(-rotation.x, rotation.y, -rotation.z, rotation.w);
     }
     
+    /// <summary>
+    /// Listening to touches.
+    /// After double tapping enter debug mode. This can be turned of for production.
+    /// </summary>
     private void Update()
     {
-        // After double tapping enter debug mode. This can be turned of for production.
+
         if (Input.touchCount <= 0)
         {
             return;
@@ -130,28 +148,37 @@ public partial class AppManager : MonoBehaviour
             }    
         }
     }
-    
+    /// <summary>
+    /// // Change all delivered buttons, to the defined status (active, inactive).
+    /// </summary>
+    /// <param name="uiElements"> List of UI elements</param>
+    /// <param name="status"> Bool status for the elements</param>
     private static void ChangeButtonsStatus(IEnumerable<GameObject> uiElements, bool status)
     {
-        // Change all delivered buttons, to the defined status (active, inactive).
+        
         foreach (var uiElement in uiElements)
         {
             uiElement.SetActive(status);
         }
     }
+    /// <summary>
+    ///  Change all elements in the list, to their opposite status (active, inactive).
+    /// </summary>
+    /// <param name="uiElements">List of UI elements</param>
     private static void ChangeButtonsStatus(IEnumerable<GameObject> uiElements)
     {
-        // Change all delivered buttons, to their opposite status (active, inactive).
+
         foreach (var uiElement in uiElements)
         {
             uiElement.SetActive(!uiElement.activeSelf);
         }
     }
-
+    /// <summary>
+    /// Start a loading animation, initialize sending the current image to the server and
+    /// call CreatePrefab with the servers answer.  
+    /// </summary>
     public async void PlaceARContent()
     {
-        // Start a loading animation, initialize sending  the current image to the server and
-        // call CreatePrefab with the servers answer.  
         hint.SetActive(false);
         var currentCameraTransformation = CameraManager.transform;
         circularProgress.StartAnimation();
@@ -162,10 +189,14 @@ public partial class AppManager : MonoBehaviour
         info.SetActive(true);
     }
 
-
+    /// <summary>
+    /// Spawn the AR content relative to the users pose. 
+    /// </summary>
+    /// <param name="result">Colmap result, containing Position and Rotation</param>
+    /// <param name="currentCameraTransformation"> Current Camera Transformation, relative to which the contant is placed</param>
     private void CreatePrefab(ColMapResult result, Component currentCameraTransformation)
     {
-        // Spawn the AR content relative to the users pose. 
+
         Destroy(_spawnedObject);
         /*
          * Colmap returns the world to the camera coordinate system of an image using a quaternion (QW, QX, QY, QZ) and a translation vector (TX, TY, TZ).
@@ -217,10 +248,12 @@ public partial class AppManager : MonoBehaviour
         scaleFactor -= 0.1f;
         updateButtons();
     }
-
+    /// <summary>
+    /// For Debugging purposes to changing the buttons text to manipulate the models scale. 
+    /// </summary>
     private void updateButtons()
     {
-        // For Debugging purposes to changing the buttons text to manipulate the models scale. 
+        
         var testScaleUp = "+ " + scaleFactor;
         var testScaleDown = "- " + scaleFactor;
         var scaleUpBtn =  GameObject.Find("Scale up").GetComponent<Button>();
@@ -228,7 +261,9 @@ public partial class AppManager : MonoBehaviour
         var scaleDownBtn =  GameObject.Find("Scale down").GetComponent<Button>();
         scaleDownBtn.GetComponentInChildren<Text>().text = testScaleDown;
     }
-
+    /// <summary>
+    /// Standard Code to get the current camera image. 
+    /// </summary>
     private unsafe void UpdateCameraImage()
     {
         if (!Permission.HasUserAuthorizedPermission(Permission.Camera))
@@ -284,11 +319,13 @@ public partial class AppManager : MonoBehaviour
         var path = Application.persistentDataPath;
         File.WriteAllBytes(path + "/test.jpg", JPGImage);
     }
-
+    /// <summary>
+    /// Sends the the current screen image and the phones GPS location to the backendserver and expects the computed 
+    /// Pose in a Colmap format as respone. 
+    /// </summary>
+    /// <returns> Pose of building (Position and Rotation) </returns>
     private async Task<ColMapResult> SendToServer()
     {
-        // Sends the the current screen image and the phones GPS location to the backendserver and expects the computed 
-        //  Pose in a Colmap format as respone. 
         var location = Input.location.lastData;
         if (cameraManager.TryGetIntrinsics(out var intrinsics))
         {
@@ -303,17 +340,21 @@ public partial class AppManager : MonoBehaviour
 
         return null;
     }
-
+    /// <summary>
+    /// To initliaze the entries from the menu, according to the prefab.
+    /// </summary>
     private void init_TMP_Dropdown()
     {
-        // To initliaze the entries from the menu, according to the prefab. 
         var dropdownEntries = (from Transform child in placePrefab.transform select child.name).ToList();
         timeDropdown.AddOptions(dropdownEntries);
     }
     
+    /// <summary>
+    /// Sets one a menu the item activate,  at position of value.
+    /// </summary>
+    /// <param name="value">Which entry to select in the menu</param>
     private void OnDropDownChanged(int value)
     {
-        // Sets one a menu the item activate,  at position of value.
         foreach (Transform child in _spawnedObject.transform)
         {
             child.gameObject.SetActive(false);
@@ -321,9 +362,12 @@ public partial class AppManager : MonoBehaviour
         _spawnedObject.transform.Find(timeDropdown.options[value].text).gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// For taking screenshots without any UI Elements but the AR content. Can be utilized for "selfies".
+    /// Currently not bound to anything.
+    /// </summary>
     public void CaptureScreen()
     {
-        // For taking screenshots without any UI Elements but the AR content. Can be used for "selfies"
         var listToDeactivate = new List<GameObject>(){info, timeSelection, gpsButton};
         ChangeButtonsStatus(listToDeactivate, false);
         ScreenCapture.CaptureScreenshot("testImage.jpg");

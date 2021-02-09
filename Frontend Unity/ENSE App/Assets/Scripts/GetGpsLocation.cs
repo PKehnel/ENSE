@@ -20,6 +20,10 @@ public class GetGpsLocation : MonoBehaviour
             _isUpdating = true;
         }
     }
+    /// <summary>
+    /// Standard Code to aquire phones GPS location.
+    /// </summary>
+    /// <returns> GPS Coords </returns>
     IEnumerator GetLocation()
     {
         if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
